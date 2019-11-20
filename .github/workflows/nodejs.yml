@@ -19,7 +19,6 @@ jobs:
       env:
         CI: true
     - name: GitHub Action for Firebase
-      uses: actions/checkout@v1
       uses: w9jds/firebase-action@v1.1.0
       with:
         args: deploy --only hosting
