@@ -24,9 +24,13 @@ jobs:
         npm test
       env:
         CI: true
-    - name: GitHub Action for Firebase
-      uses: w9jds/firebase-action@v1.1.0
-      with:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: GitHub Action for Firebase
+        uses: w9jds/firebase-action@v1.1.0
+        with:
           args: deploy --only hosting
-      env:
+        env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
