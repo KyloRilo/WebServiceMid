@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardBody, CardTitle, CardSubtitle, CardFooter, Button, Form, FormInput, FormGroup } from "shards-react";
+import { Card, CardBody, CardTitle, CardFooter, Button, Form, FormInput, FormGroup } from "shards-react";
 
 export default function LoginCard() {
   return (
