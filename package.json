@@ -12,6 +12,7 @@
     "moment": "2.23.0",
     "node-sass": "4.13.0",
     "nouislider": "12.1.0",
+    "npm": "^6.13.1",
     "perfect-scrollbar": "1.4.0",
     "prop-types": "15.6.2",
     "react": "16.7.0",
