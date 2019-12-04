@@ -18,7 +18,6 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 
 import AuthNavbar from "components/Navbars/AuthNavbar.jsx";
-import Footer from "components/Footer/Footer.jsx";
 
 import routes from "routes.js";
 
@@ -64,14 +63,10 @@ class Pages extends React.Component {
   getFullPageName = routes => {
     let pageName = this.getActiveRoute(routes);
     switch (pageName) {
-      case "Pricing":
-        return "pricing-page";
       case "Login":
         return "login-page";
       case "Register":
         return "register-page";
-      case "Lock Screen":
-        return "lock-page";
       default:
         return "Default Brand Text";
     }
@@ -86,7 +81,6 @@ class Pages extends React.Component {
         <div className="wrapper wrapper-full-page" ref="fullPages">
           <div className={"full-page " + this.getFullPageName(routes)}>
             <Switch>{this.getRoutes(routes)}</Switch>
-            <Footer fluid />
           </div>
         </div>
       </>

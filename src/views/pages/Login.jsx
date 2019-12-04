@@ -34,11 +34,25 @@ import {
 } from "reactstrap";
 
 class Login extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {email: '', password: ''};
+  }
   componentDidMount() {
     document.body.classList.toggle("login-page");
   }
   componentWillUnmount() {
     document.body.classList.toggle("login-page");
+  }
+  handleLogin = (e) => {
+    console.log("Email: " + this.state.email);
+    console.log("Password: " + this.state.password);
+  }
+  handleEmailChange = (e) => {
+    this.setState({email: e.target.value});
+  }
+  handlePasswordChange = (e) => {
+    this.setState({password: e.target.value});
   }
   render() {
     return (
@@ -62,7 +76,7 @@ class Login extends React.Component {
                           <i className="tim-icons icon-email-85" />
                         </InputGroupText>
                       </InputGroupAddon>
-                      <Input placeholder="Email" type="text" />
+                      <Input placeholder="Email" type="text" value={this.state.email} onChange={this.handleEmailChange}/>
                     </InputGroup>
                     <InputGroup>
                       <InputGroupAddon addonType="prepend">
@@ -70,7 +84,7 @@ class Login extends React.Component {
                           <i className="tim-icons icon-lock-circle" />
                         </InputGroupText>
                       </InputGroupAddon>
-                      <Input placeholder="Password" type="text" />
+                      <Input placeholder="Password" type="password" value={this.state.password} onChange={this.handlePasswordChange}/>
                     </InputGroup>
                   </CardBody>
                   <CardFooter>
@@ -79,7 +93,7 @@ class Login extends React.Component {
                       className="mb-3"
                       color="primary"
                       href="#pablo"
-                      onClick={e => e.preventDefault()}
+                      onClick={this.handleLogin}
                       size="lg"
                     >
                       Get Started
