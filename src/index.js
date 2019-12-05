@@ -27,17 +27,21 @@ import "assets/css/nucleo-icons.css";
 import "assets/scss/black-dashboard-pro-react.scss?v=1.0.0";
 import "assets/demo/demo.css";
 import "react-notification-alert/dist/animate.css";
+import Firebase, { FirebaseContext } from './components/Firebase';
 
 const hist = createBrowserHistory();
 
 ReactDOM.render(
-  <Router history={hist}>
+  <FirebaseContext.Provider value={new Firebase()}>
+    <Router history={hist}>
     <Switch>
       <Route path="/auth" render={props => <AuthLayout {...props} />} />
       <Route path="/admin" render={props => <AdminLayout {...props} />} />
       <Route path="/rtl" render={props => <RTLLayout {...props} />} />
       <Redirect from="/" to="/auth/login" />
     </Switch>
-  </Router>,
+  </Router>
+  </FirebaseContext.Provider>,
+  
   document.getElementById("root")
 );

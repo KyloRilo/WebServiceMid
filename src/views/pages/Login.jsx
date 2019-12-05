@@ -98,17 +98,6 @@ class Login extends React.Component {
                     >
                       Get Started
                     </Button>
-                    <div className="pull-left">
-                      <h6>
-                        <a
-                          className="link footer-link"
-                          href="#pablo"
-                          onClick={e => e.preventDefault()}
-                        >
-                          Create Account
-                        </a>
-                      </h6>
-                    </div>
                   </CardFooter>
                 </Card>
               </Form>

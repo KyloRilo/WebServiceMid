@@ -25,8 +25,6 @@ import {
   CardFooter,
   CardImg,
   CardTitle,
-  Label,
-  FormGroup,
   Form,
   Input,
   InputGroupAddon,
@@ -37,12 +35,45 @@ import {
   Col
 } from "reactstrap";
 
+import { FirebaseContext, auth } from 'firebase'
+
 class Register extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {name: '',email: '', password: ''};
+  }
   componentDidMount() {
     document.body.classList.toggle("register-page");
   }
   componentWillUnmount() {
     document.body.classList.toggle("register-page");
+  }
+  handleRegister = (e) => {
+    console.log("Name: " + this.state.name);
+    console.log("Email: " + this.state.email);
+    console.log("Password: " + this.state.password);
+  }
+  handleNameChange = (e) => {
+    this.setState({name: e.target.value})
+  }
+  handleEmailChange = (e) => {
+    this.setState({email: e.target.value});
+  }
+  handlePasswordChange = (e) => {
+    this.setState({password: e.target.value});
+  }
+  onSubmit = event => {
+    const {name, email, password} = this.state;
+
+    auth.doCreateUserWithEmailAndPassword(email, password)
+      .then(authUser => {
+        this.setState({ ...authUser});
+      })
+      .catch(error => {
+        this.setState({error});
+      });
+      event.preventDefault();
   }
   render() {
     return (
@@ -50,45 +81,7 @@ class Register extends React.Component {
         <div className="content">
           <Container>
             <Row>
-              <Col className="ml-auto" md="5">
-                <div className="info-area info-horizontal mt-5">
-                  <div className="icon icon-warning">
-                    <i className="tim-icons icon-wifi" />
-                  </div>
-                  <div className="description">
-                    <h3 className="info-title">Marketing</h3>
-                    <p className="description">
-                      We've created the marketing campaign of the website. It
-                      was a very interesting collaboration.
-                    </p>
-                  </div>
-                </div>
-                <div className="info-area info-horizontal">
-                  <div className="icon icon-primary">
-                    <i className="tim-icons icon-triangle-right-17" />
-                  </div>
-                  <div className="description">
-                    <h3 className="info-title">Fully Coded in HTML5</h3>
-                    <p className="description">
-                      We've developed the website with HTML5 and CSS3. The
-                      client has access to the code using GitHub.
-                    </p>
-                  </div>
-                </div>
-                <div className="info-area info-horizontal">
-                  <div className="icon icon-info">
-                    <i className="tim-icons icon-trophy" />
-                  </div>
-                  <div className="description">
-                    <h3 className="info-title">Built Audience</h3>
-                    <p className="description">
-                      There is also a Fully Customizable CMS Admin Dashboard for
-                      this product.
-                    </p>
-                  </div>
-                </div>
-              </Col>
-              <Col className="mr-auto" md="7">
+              <Col className="ml-auto mr-auto" md="7">
                 <Card className="card-register card-white">
                   <CardHeader>
                     <CardImg
@@ -105,7 +98,7 @@ class Register extends React.Component {
                             <i className="tim-icons icon-single-02" />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Full Name" type="text" />
+                        <Input placeholder="Full Name" type="text" value = {this.state.name} onChange={this.handleNameChange}/>
                       </InputGroup>
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
@@ -113,7 +106,7 @@ class Register extends React.Component {
                             <i className="tim-icons icon-email-85" />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Email" type="text" />
+                        <Input placeholder="Email" type="text" value={this.state.email} onChange={this.handleEmailChange}/>
                       </InputGroup>
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
@@ -121,18 +114,8 @@ class Register extends React.Component {
                             <i className="tim-icons icon-lock-circle" />
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input placeholder="Password" type="text" />
+                        <Input placeholder="Password" type="password" value={this.state.password} onChange={this.handlePasswordChange}/>
                       </InputGroup>
-                      <FormGroup check className="text-left">
-                        <Label check>
-                          <Input type="checkbox" />
-                          <span className="form-check-sign" />I agree to the{" "}
-                          <a href="#pablo" onClick={e => e.preventDefault()}>
-                            terms and conditions
-                          </a>
-                          .
-                        </Label>
-                      </FormGroup>
                     </Form>
                   </CardBody>
                   <CardFooter>
@@ -140,7 +123,7 @@ class Register extends React.Component {
                       className="btn-round"
                       color="primary"
                       href="#pablo"
-                      onClick={e => e.preventDefault()}
+                      onClick={this.onSubmit}
                       size="lg"
                     >
                       Get Started
