@@ -35,8 +35,6 @@ import {
   Col
 } from "reactstrap";
 
-import { FirebaseContext, auth } from 'firebase'
-
 class Register extends React.Component {
   constructor(props) {
     super(props);
@@ -62,18 +60,6 @@ class Register extends React.Component {
   }
   handlePasswordChange = (e) => {
     this.setState({password: e.target.value});
-  }
-  onSubmit = event => {
-    const {name, email, password} = this.state;
-
-    auth.doCreateUserWithEmailAndPassword(email, password)
-      .then(authUser => {
-        this.setState({ ...authUser});
-      })
-      .catch(error => {
-        this.setState({error});
-      });
-      event.preventDefault();
   }
   render() {
     return (

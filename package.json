@@ -40,9 +40,9 @@
     "@types/react": "16.7.18"
   },
   "scripts": {
-    "start": "NODE_PATH=./src react-scripts start",
-    "build": "NODE_PATH=./src react-scripts build",
-    "test": "NODE_PATH=./src react-scripts test",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
     "compile-sass": "node-sass src/assets/scss/black-dashboard-pro-react.scss src/assets/css/black-dashboard-pro-react.css",

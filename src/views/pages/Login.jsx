@@ -15,6 +15,8 @@
 
 */
 import React from "react";
+import * as firebase from "firebase/app"
+require('firebase/auth')
 
 // reactstrap components
 import {
@@ -33,8 +35,20 @@ import {
   Col
 } from "reactstrap";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyBHeTk3vPuoVFFVVfia3cx7XdOZ4P0zHZ8",
+  authDomain: "webservicemidterm.firebaseapp.com",
+  databaseURL: "https://webservicemidterm.firebaseio.com",
+  projectId: "webservicemidterm",
+  storageBucket: "webservicemidterm.appspot.com",
+  messagingSenderId: "26177089883",
+  appId: "1:26177089883:web:6a773a3938d2f42c7e6a7e",
+  measurementId: "G-S2LMF21EDL"
+};
+
 class Login extends React.Component {
   constructor(props) {
+    firebase.initializeApp(firebaseConfig);
     super(props);
     this.state = {email: '', password: ''};
   }
@@ -47,6 +61,14 @@ class Login extends React.Component {
   handleLogin = (e) => {
     console.log("Email: " + this.state.email);
     console.log("Password: " + this.state.password);
+    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(
+      function(error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode);
+        console.log(errorMessage);
+      }
+    )
   }
   handleEmailChange = (e) => {
     this.setState({email: e.target.value});
