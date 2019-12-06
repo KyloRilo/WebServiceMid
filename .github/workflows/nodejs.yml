@@ -1,14 +1,12 @@
 name: Node CI
+
 on: [push]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+    - uses: actions/checkout@v1
     - name: Use Node.js 12
       uses: actions/setup-node@v1
       with:
@@ -17,6 +15,7 @@ jobs:
       run: |
         npm ci
         npm run build --if-present
+        npm test
       env:
         CI: true
     - name: GitHub Action for Firebase
@@ -25,4 +24,3 @@ jobs:
         args: deploy --only hosting
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-     
