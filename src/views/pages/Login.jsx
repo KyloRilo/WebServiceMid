@@ -16,7 +16,7 @@
 */
 import React from "react";
 import * as firebase from "firebase/app"
-require('firebase/auth')
+import {withRouter} from 'react-router-dom'
 
 // reactstrap components
 import {
@@ -34,6 +34,8 @@ import {
   Container,
   Col
 } from "reactstrap";
+
+require('firebase/auth')
 
 const firebaseConfig = {
   apiKey: "AIzaSyBHeTk3vPuoVFFVVfia3cx7XdOZ4P0zHZ8",
@@ -68,7 +70,12 @@ class Login extends React.Component {
         console.log(errorCode);
         console.log(errorMessage);
       }
-    )
+    ).then(auth => {
+      if(auth != null){
+        console.log(auth)
+        this.props.history.push('/admin/dashboard')
+      }
+    })
   }
   handleEmailChange = (e) => {
     this.setState({email: e.target.value});
@@ -131,4 +138,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default withRouter(Login);
