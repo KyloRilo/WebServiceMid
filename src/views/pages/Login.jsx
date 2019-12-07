@@ -61,8 +61,6 @@ class Login extends React.Component {
     document.body.classList.toggle("login-page");
   }
   handleLogin = (e) => {
-    console.log("Email: " + this.state.email);
-    console.log("Password: " + this.state.password);
     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(
       function(error) {
         var errorCode = error.code;
