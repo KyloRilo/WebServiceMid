@@ -16,19 +16,15 @@
 */
 import React from "react";
 // nodejs library that concatenates classes
-import classNames from "classnames";
 // react plugin used to create charts
-import { Line, Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 // react plugin for creating vector maps
 
 // reactstrap components
 import {
-  Button,
-  ButtonGroup,
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
   CardTitle,
   Row,
   Col,
@@ -37,22 +33,58 @@ import {
 // core components
 import {
   chartExample1,
-  chartExample2,
-  chartExample3,
-  chartExample4
 } from "variables/charts.jsx";
+const chartColor = '#FFFFFF';
+
+let stockApi = async () => {
+  const data = await fetch('https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=GOOGL&apikey=UR7CD7OWCCPKBSBG');
+  const response = await data.json();
+  const TIME_SERIES_MONTHLY = Object.fromEntries(Object.entries(response['Monthly Time Series']).slice(0, 12));
+  const highVals = (Object.values(TIME_SERIES_MONTHLY).map(Obj => Number(Obj['2. high'])))
+  return highVals
+};
+
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      bigChartData: "data1"
+      bigChartData: "data1",
+      chartData: null
     };
   }
-  setBgChartData = name => {
-    this.setState({
-      bigChartData: name
-    });
-  };
+  data = (canvas) => {
+    stockApi().then(data => {
+      this.setState({
+        chartData: data
+      })
+    }).catch(err => {})
+    var ctx = canvas.getContext("2d");
+
+    var gradientStroke = ctx.createLinearGradient(500, 0, 100, 0);
+    gradientStroke.addColorStop(0, '#80b6f4');
+    gradientStroke.addColorStop(1, chartColor);
+
+    var gradientFill = ctx.createLinearGradient(0, 170, 0, 50);
+    gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
+    gradientFill.addColorStop(1, "rgba(249, 99, 59, 0.40)");
+    return {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        datasets: [{
+            label: "High",
+            borderColor: "#f96332",
+            pointBorderColor: "#FFF",
+            pointBackgroundColor: "#f96332",
+            pointBorderWidth: 2,
+            pointHoverRadius: 4,
+            pointHoverBorderWidth: 1,
+            pointRadius: 4,
+            fill: true,
+            backgroundColor: gradientFill,
+            borderWidth: 2,
+            data: this.state.chartData || [542, 480, 430, 550, 530, 453, 380, 434, 568, 610, 700, 630]
+        }]
+    }
+};
   render() {
     return (
       <>
@@ -63,235 +95,19 @@ class Dashboard extends React.Component {
                 <CardHeader>
                   <Row>
                     <Col className="text-left" sm="6">
-                      <h5 className="card-category">Total Shipments</h5>
-                      <CardTitle tag="h2">Performance</CardTitle>
-                    </Col>
-                    <Col sm="6">
-                      <ButtonGroup
-                        className="btn-group-toggle float-right"
-                        data-toggle="buttons"
-                      >
-                        <Button
-                          color="info"
-                          id="0"
-                          size="sm"
-                          tag="label"
-                          className={classNames("btn-simple", {
-                            active: this.state.bigChartData === "data1"
-                          })}
-                          onClick={() => this.setBgChartData("data1")}
-                        >
-                          <input defaultChecked name="options" type="radio" />
-                          <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                            Accounts
-                          </span>
-                          <span className="d-block d-sm-none">
-                            <i className="tim-icons icon-single-02" />
-                          </span>
-                        </Button>
-                        <Button
-                          color="info"
-                          id="1"
-                          size="sm"
-                          tag="label"
-                          className={classNames("btn-simple", {
-                            active: this.state.bigChartData === "data2"
-                          })}
-                          onClick={() => this.setBgChartData("data2")}
-                        >
-                          <input name="options" type="radio" />
-                          <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                            Purchases
-                          </span>
-                          <span className="d-block d-sm-none">
-                            <i className="tim-icons icon-gift-2" />
-                          </span>
-                        </Button>
-                        <Button
-                          color="info"
-                          id="2"
-                          size="sm"
-                          tag="label"
-                          className={classNames("btn-simple", {
-                            active: this.state.bigChartData === "data3"
-                          })}
-                          onClick={() => this.setBgChartData("data3")}
-                        >
-                          <input name="options" type="radio" />
-                          <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                            Sessions
-                          </span>
-                          <span className="d-block d-sm-none">
-                            <i className="tim-icons icon-tap-02" />
-                          </span>
-                        </Button>
-                      </ButtonGroup>
+                      <h5 className="card-category">Google Stock</h5>
+                      <CardTitle tag="h2">High Trends</CardTitle>
                     </Col>
                   </Row>
                 </CardHeader>
                 <CardBody>
                   <div className="chart-area">
-                    <Line
-                      data={chartExample1[this.state.bigChartData]}
+                    {
+                      <Line
+                      data={this.data}
                       options={chartExample1.options}
-                    />
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col lg="3" md="6">
-              <Card className="card-stats">
-                <CardBody>
-                  <Row>
-                    <Col xs="5">
-                      <div className="info-icon text-center icon-warning">
-                        <i className="tim-icons icon-chat-33" />
-                      </div>
-                    </Col>
-                    <Col xs="7">
-                      <div className="numbers">
-                        <p className="card-category">Number</p>
-                        <CardTitle tag="h3">150GB</CardTitle>
-                      </div>
-                    </Col>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  <div className="stats">
-                    <i className="tim-icons icon-refresh-01" /> Update Now
-                  </div>
-                </CardFooter>
-              </Card>
-            </Col>
-            <Col lg="3" md="6">
-              <Card className="card-stats">
-                <CardBody>
-                  <Row>
-                    <Col xs="5">
-                      <div className="info-icon text-center icon-primary">
-                        <i className="tim-icons icon-shape-star" />
-                      </div>
-                    </Col>
-                    <Col xs="7">
-                      <div className="numbers">
-                        <p className="card-category">Followers</p>
-                        <CardTitle tag="h3">+45k</CardTitle>
-                      </div>
-                    </Col>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  <div className="stats">
-                    <i className="tim-icons icon-sound-wave" /> Last Research
-                  </div>
-                </CardFooter>
-              </Card>
-            </Col>
-            <Col lg="3" md="6">
-              <Card className="card-stats">
-                <CardBody>
-                  <Row>
-                    <Col xs="5">
-                      <div className="info-icon text-center icon-success">
-                        <i className="tim-icons icon-single-02" />
-                      </div>
-                    </Col>
-                    <Col xs="7">
-                      <div className="numbers">
-                        <p className="card-category">Users</p>
-                        <CardTitle tag="h3">150,000</CardTitle>
-                      </div>
-                    </Col>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  <div className="stats">
-                    <i className="tim-icons icon-trophy" /> Customers feedback
-                  </div>
-                </CardFooter>
-              </Card>
-            </Col>
-            <Col lg="3" md="6">
-              <Card className="card-stats">
-                <CardBody>
-                  <Row>
-                    <Col xs="5">
-                      <div className="info-icon text-center icon-danger">
-                        <i className="tim-icons icon-molecule-40" />
-                      </div>
-                    </Col>
-                    <Col xs="7">
-                      <div className="numbers">
-                        <p className="card-category">Errors</p>
-                        <CardTitle tag="h3">12</CardTitle>
-                      </div>
-                    </Col>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  <div className="stats">
-                    <i className="tim-icons icon-watch-time" /> In the last
-                    hours
-                  </div>
-                </CardFooter>
-              </Card>
-            </Col>
-            <Col lg="4">
-              <Card className="card-chart">
-                <CardHeader>
-                  <h5 className="card-category">Total Shipments</h5>
-                  <CardTitle tag="h3">
-                    <i className="tim-icons icon-bell-55 text-primary" />{" "}
-                    763,215
-                  </CardTitle>
-                </CardHeader>
-                <CardBody>
-                  <div className="chart-area">
-                    <Line
-                      data={chartExample2.data}
-                      options={chartExample2.options}
-                    />
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col lg="4">
-              <Card className="card-chart">
-                <CardHeader>
-                  <h5 className="card-category">Daily Sales</h5>
-                  <CardTitle tag="h3">
-                    <i className="tim-icons icon-delivery-fast text-info" />{" "}
-                    3,500€
-                  </CardTitle>
-                </CardHeader>
-                <CardBody>
-                  <div className="chart-area">
-                    <Bar
-                      data={chartExample3.data}
-                      options={chartExample3.options}
-                    />
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col lg="4">
-              <Card className="card-chart">
-                <CardHeader>
-                  <h5 className="card-category">Completed Tasks</h5>
-                  <CardTitle tag="h3">
-                    <i className="tim-icons icon-send text-success" /> 12,100K
-                  </CardTitle>
-                </CardHeader>
-                <CardBody>
-                  <div className="chart-area">
-                    <Line
-                      data={chartExample4.data}
-                      options={chartExample4.options}
-                    />
+                      />
+                    }
                   </div>
                 </CardBody>
               </Card>

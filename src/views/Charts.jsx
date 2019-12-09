@@ -30,6 +30,7 @@ import {
   chartExample10
 } from "variables/charts.jsx";
 
+
 class Charts extends React.Component {
   render() {
     return (
@@ -194,6 +195,7 @@ class Charts extends React.Component {
         </div>
       </>
     );
+    
   }
 }
 

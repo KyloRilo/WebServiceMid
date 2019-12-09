@@ -19,6 +19,7 @@
 // #############################
 
 // chartExample1 and chartExample2 options
+
 let chart_1_2_3_options = {
   maintainAspectRatio: false,
   legend: {
@@ -72,8 +73,16 @@ let chart_1_2_3_options = {
 // #########################################
 // // // used inside src/views/Dashboard.jsx
 // #########################################
+let stockApi = async () => {
+  const data = await fetch('https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=GOOGL&apikey=UR7CD7OWCCPKBSBG')
+  const response = await data.json()
+  const TIME_SERIES_MONTHLY = Object.fromEntries(Object.entries(response['Monthly Time Series']).slice(0, 12));
+  const highVals = (Object.values(TIME_SERIES_MONTHLY).map(Obj => Number(Obj['2. high'])))
+  return highVals
+};
 let chartExample1 = {
   data1: canvas => {
+    
     let ctx = canvas.getContext("2d");
 
     let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
@@ -81,8 +90,7 @@ let chartExample1 = {
     gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
     gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
     gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); //blue colors
-
-    return {
+    let rv = {
       labels: [
         "JAN",
         "FEB",
@@ -113,10 +121,12 @@ let chartExample1 = {
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
           pointRadius: 4,
-          data: [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100]
+          data: []
         }
       ]
     };
+    //console.log(rv);
+    return rv;
   },
   data2: canvas => {
     let ctx = canvas.getContext("2d");
@@ -208,7 +218,55 @@ let chartExample1 = {
       ]
     };
   },
-  options: chart_1_2_3_options
+  options: {
+    maintainAspectRatio: false,
+    legend: {
+      display: false
+    },
+    tooltips: {
+      backgroundColor: "#f5f5f5",
+      titleFontColor: "#333",
+      bodyFontColor: "#666",
+      bodySpacing: 4,
+      xPadding: 12,
+      mode: "nearest",
+      intersect: 0,
+      position: "nearest"
+    },
+    responsive: true,
+    scales: {
+      yAxes: [
+        {
+          barPercentage: 1.6,
+          gridLines: {
+            drawBorder: false,
+            color: "rgba(29,140,248,0.0)",
+            zeroLineColor: "transparent"
+          },
+          ticks: {
+            suggestedMin: 1000,
+            suggestedMax: 1400,
+            padding: 20,
+            fontColor: "#9e9e9e"
+          }
+        }
+      ],
+      xAxes: [
+        {
+          barPercentage: 1.6,
+          gridLines: {
+            drawBorder: false,
+            color: "rgba(29,140,248,0.1)",
+            zeroLineColor: "transparent"
+          },
+          ticks: {
+            padding: 20,
+            fontColor: "#9e9e9e"
+          }
+        }
+      ]
+    }
+  }
 };
 
 // #########################################
@@ -334,6 +392,7 @@ let chartExample3 = {
 // #########################################
 const chartExample4 = {
   data: canvas => {
+
     let ctx = canvas.getContext("2d");
 
     let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
@@ -505,7 +564,7 @@ const chartExample5 = {
 // // // used inside src/views/Charts.jsx
 // #########################################
 const chartExample6 = {
-  data: canvas => {
+  data: async canvas => {
     let ctx = canvas.getContext("2d");
     var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
 
@@ -530,7 +589,7 @@ const chartExample6 = {
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
           pointRadius: 4,
-          data: [80, 100, 70, 80, 120, 80]
+          data: await stockApi(),
         }
       ]
     };
@@ -561,8 +620,8 @@ const chartExample6 = {
             zeroLineColor: "transparent"
           },
           ticks: {
-            suggestedMin: 60,
-            suggestedMax: 125,
+            suggestedMin: 1000,
+            suggestedMax: 5000,
             padding: 20,
             fontColor: "#9e9e9e"
           }
@@ -869,7 +928,7 @@ const chartExample10 = {
   }
 };
 
-module.exports = {
+/* module.exports = {
   chartExample1, // in src/views/Dashboard.jsx
   chartExample2, // in src/views/Dashboard.jsx
   chartExample3, // in src/views/Dashboard.jsx
@@ -879,5 +938,19 @@ module.exports = {
   chartExample7, // in src/views/Charts.jsx
   chartExample8, // in src/views/Charts.jsx
   chartExample9, // in src/views/Charts.jsx
-  chartExample10 // in src/views/Charts.jsx
+  chartExample10, // in src/views/Charts.jsx,
+  stockApi
+}; */
+export {
+  chartExample1, // in src/views/Dashboard.jsx
+  chartExample2, // in src/views/Dashboard.jsx
+  chartExample3, // in src/views/Dashboard.jsx
+  chartExample4, // in src/views/Dashboard.jsx
+  chartExample5, // in src/views/Charts.jsx
+  chartExample6, // in src/views/Charts.jsx
+  chartExample7, // in src/views/Charts.jsx
+  chartExample8, // in src/views/Charts.jsx
+  chartExample9, // in src/views/Charts.jsx
+  chartExample10, // in src/views/Charts.jsx
 };
+
