@@ -54,6 +54,7 @@ class Dashboard extends React.Component {
   }
   data = (canvas) => {
     stockApi().then(data => {
+      console.log(data)
       this.setState({
         chartData: data
       })
