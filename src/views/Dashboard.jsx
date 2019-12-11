@@ -38,6 +38,7 @@ const chartColor = '#FFFFFF';
 
 let stockApi = async () => {
   const data = await fetch('https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=GOOGL&apikey=UR7CD7OWCCPKBSBG');
+  console.log(data);
   const response = await data.json();
   const TIME_SERIES_MONTHLY = Object.fromEntries(Object.entries(response['Monthly Time Series']).slice(0, 12));
   const highVals = (Object.values(TIME_SERIES_MONTHLY).map(Obj => Number(Obj['2. high'])))
@@ -54,7 +55,6 @@ class Dashboard extends React.Component {
   }
   data = (canvas) => {
     stockApi().then(data => {
-      console.log(data)
       this.setState({
         chartData: data
       })
